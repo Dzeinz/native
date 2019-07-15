@@ -1,17 +1,30 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView } from 'react-native';
+import axios from 'axios';
+import AlbumDetail from 'components/AlbumDetail';
 
 class AlbumList extends Component {
+  state = {
+    albums: [],
+  };
+
   componentDidMount() {
-    console.log('componentDidMount in albumList');
+    axios
+      .get('https://rallycoding.herokuapp.com/api/music_albums')
+      .then(response => {
+        this.setState({ albums: response.data });
+      });
+  }
+
+  renderAlbums() {
+    const { albums } = this.state;
+    return albums.map(album => {
+      return <AlbumDetail key={album.title} album={album} />;
+    });
   }
 
   render() {
-    return (
-      <View>
-        <Text>Album List!</Text>
-      </View>
-    );
+    return <ScrollView>{this.renderAlbums()}</ScrollView>;
   }
 }
 
